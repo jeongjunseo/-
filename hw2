@@ -1,0 +1,105 @@
+# 학생과 과목별 성적 리스트 (처음엔 빈 리스트)
+std = []
+
+# 인덱스별 구성
+# 0 1 2 3 4 5 6 7 8    
+# 학번 이름 영어 C python 총점 평균 학점 등수
+
+# 학점 계산 함수
+def grade(score):
+    if score >= 95: return "A+"
+    elif score >= 90: return "A"
+    elif score >= 85: return "B+"
+    elif score >= 80: return "B"
+    elif score >= 75: return "C+"
+    elif score >= 70: return "C"
+    elif score >= 65: return "D+"
+    elif score >= 60: return "D"
+    else: return "F"
+
+# 총점 및 평균 계산 함수
+def update_scores():
+    for student in std:
+        student[5] = student[2] + student[3] + student[4] # 총점
+        student[6] = student[5] / 3 # 평균
+        student[7] = grade(student[6]) # 학점
+    
+    # 등수 계산
+    scores = [student[5] for student in std]
+    sorted_scores = sorted(scores, reverse=True)
+    for student in std:
+        student[8] = sorted_scores.index(student[5]) + 1
+
+# 1. 학생 정보 삽입 함수
+def insert_student():
+    print("\n[ 학생 정보 추가 ]")
+    학번 = input("학번: ")
+    이름 = input("이름: ")
+    영어 = int(input("영어: "))
+    C = int(input("C-언어: "))
+    파이썬 = int(input("파이썬: "))
+
+    student = [학번, 이름, 영어, C, 파이썬, 0, 0, "", 0] # 새로운 학생 추가
+    std.append(student)
+    
+    update_scores() # 총점, 평균, 학점, 등수 업데이트
+    print("학생 정보가 추가되었습니다!")
+
+#2. 학생 정보 삭제 함수
+def delete_student():
+    print("\n[ 학생 정보 삭제 ]")
+    학번 = input("삭제할 학생의 학번을 입력하세요: ")
+    
+    for student in std:
+        if student[0] == 학번:
+            std.remove(student)
+            update_scores() # 등수 업데이트
+            print("학생 정보가 삭제되었습니다!")
+            return
+    
+    print(" 해당 학번의 학생이 없습니다.")
+
+#  3. 학생 정보 탐색 함수
+def search_student():
+    print("\n[ 학생 정보 탐색 ]")
+    학번 = input("검색할 학생의 학번을 입력하세요: ")
+
+    for student in std:
+        if student[0] == 학번:
+            print(f"학번: {student[0]}, 이름: {student[1]}, 총점: {student[5]}, 평균: {student[6]:.2f}, 학점: {student[7]}, 등수: {student[8]}")
+            return
+    
+    print("해당 학번의 학생이 없습니다.")
+
+# 메인 실행 함수
+def main():
+    while True:
+        print("\n===== 학생 성적 관리 시스템 =====")
+        print("1. 학생 추가")
+        print("2. 학생 삭제")
+        print("3. 학생 검색")
+        print("4. 전체 학생 출력")
+        print("5. 종료")
+        
+        menu = input("원하는 기능을 선택하세요: ")
+
+        if menu == "1":
+            insert_student()
+        elif menu == "2":
+            delete_student()
+        elif menu == "3":
+            search_student()
+        elif menu == "4":
+            if not std:
+                print("등록된 학생이 없습니다.")
+            else:
+                print("\n[ 전체 학생 목록 ]")
+                for student in std:
+                    print(f"학번: {student[0]}, 이름: {student[1]}, 총점: {student[5]}, 평균: {student[6]:.2f}, 학점: {student[7]}, 등수: {student[8]}")
+        elif menu == "5":
+            print("프로그램을 종료합니다.")
+            break
+        else:
+            print("올바른 번호를 입력하세요.")
+
+main()
